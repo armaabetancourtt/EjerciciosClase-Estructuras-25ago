@@ -1,37 +1,84 @@
+package Priority;
+
 /**
  *
  * @author abeta
  */
-public class PriorityNode<dataType> {
 
-    private int priority;
-    private dataType data;
+public class PriorityQueue {
 
-    public PriorityNode() {}
+    private PriorityNode[] data;
+    private int size;
+    private int capacity;
 
-    public PriorityNode(int priority, dataType data) {
-        this.priority = priority;
-        this.data = data;
+    public PriorityQueue() {
+        this.capacity = 10;
+        this.data = new PriorityNode[capacity + 1]; // índice 1-base para heap
+        this.size = 0;
     }
 
-    public int getPriority() {
-        return priority;
+    public void push(int priority, String value) {
+        if (size + 1 >= data.length) {
+            resize();
+        }
+
+        PriorityNode nodeToInsert = new PriorityNode(priority, value);
+        size++;
+        data[size] = nodeToInsert;
+
+        int current = size;
+        int parent = current / 2;
+
+        while (parent > 0 && data[parent].getPriority() > data[current].getPriority()) {
+            PriorityNode temp = data[parent];
+            data[parent] = data[current];
+            data[current] = temp;
+
+            current = parent;
+            parent = current / 2;
+        }
     }
 
-    public void setPriority(int priority) {
-        this.priority = priority;
+    private void resize() {
+        capacity *= 2;
+        PriorityNode[] newData = new PriorityNode[capacity + 1];
+        System.arraycopy(data, 0, newData, 0, data.length);
+        data = newData;
     }
 
-    public dataType getData() {
-        return data;
+    public int getSize() {
+        return size;
     }
 
-    public void setData(dataType data) {
-        this.data = data;
-    }
+    public PriorityNode pop() {
+        if (size == 0) return null;
 
-    @Override
-    public String toString() {
-        return "PriorityNode{" + "priority=" + priority + ", data=" + data + '}';
+        PriorityNode min = data[1];
+        data[1] = data[size];
+        data[size] = null;
+        size--;
+
+        int current = 1;
+        while (true) {
+            int left = current * 2;
+            int right = current * 2 + 1;
+            int smallest = current;
+
+            if (left <= size && data[left].getPriority() < data[smallest].getPriority()) {
+                smallest = left;
+            }
+            if (right <= size && data[right].getPriority() < data[smallest].getPriority()) {
+                smallest = right;
+            }
+            if (smallest == current) break;
+
+            PriorityNode temp = data[current];
+            data[current] = data[smallest];
+            data[smallest] = temp;
+
+            current = smallest;
+        }
+
+        return min;
     }
 }
