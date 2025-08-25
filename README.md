@@ -16,8 +16,7 @@ Genera elementos aleatorios y los muestra en **orden ascendente de prioridad**.
 
 ## Requisitos
 
-- Java JDK 8 o superior.
-- Terminal o IDE compatible con Java.
+- Visual Studio Code con Java JDK 8 o superior o NetBeans
 
 ---
 
